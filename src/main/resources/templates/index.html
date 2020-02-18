@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script>
+        function renderTable(item, data) {
+            let text = '<span> <b> Запрошенная ДНК: </b>' + data.dna + '</span>';
+            if (data.answer != null)
+                text += '<div class="alert alert-success" role="alert">Найдено ORF: ' + data.answer + '</div>';
+            else text += '<div class="alert alert-danger" role="alert">ORF не найдено</div>';
+            item.innerHTML = text;
+        }
+
+        function errorMessage(item, message) {
+            item.innerHTML = '<div class="alert alert-danger" role="alert">' + message + '</div>';
+        }
+
+        function send(dest, data, item) {
+            $.ajax({
+                type: 'post',
+                url: dest,
+                data: data
+            }).done(function (data) {
+                renderTable(item, data);
+            }).fail(function () {
+                errorMessage(item, 'Что-то пошло не так')
+            });
+        }
+
+        function manual() {
+            send('/manual',
+                {
+                    "dna": document.getElementById("dna").value
+                },
+                document.getElementById("manual-output")
+            );
+        }
+
+        function generate() {
+            let item = document.getElementById("generated-output");
+
+            let data = {
+                "length": document.getElementById("length").value,
+                "gcPercentCount": document.getElementById("gcPercentCount").value
+            };
+
+            if (Number(data.length) > 1000 || Number(data.length) < 100 || Number(data.gcPercentCount) > 80 || Number(data.gcPercentCount) < 20)
+                this.errorMessage(item, 'Неверные значения');
+            else send('/generate', data, item);
+        }
+
+    </script>
+
+    <style>
+        h2 {
+            color: white;
+        }
+
+        h4 {
+            color: white;
+        }
+
+        span {
+            color: white;
+        }
+
+    </style>
+</head>
+<body style="background-image: url('https://wallpaperplay.com/walls/full/a/9/e/44641.jpg')">
+
+<div class="container">
+    <div class="row">
+        <div class="col-auto">
+            <h2>Ввести вручную</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto">
+            <h4>Введите ДНК</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto">
+            <div class="input-group mb-3">
+                <input type="text" id="dna" class="form-control" placeholder="ДНК" aria-label="DNA"
+                       aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button" onclick="manual()">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-auto">
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto" id="manual-output">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto">
+            <h2>Сгенерировать</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto">
+            <h4>Введите длину строки ДНК (в диапазоне 100-1000) и её GC-состав (в диапазоне 20-80)</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Длина</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Длина" aria-label="Длина"
+                       aria-describedby="basic-addon1" id="length">
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon2">Процент</span>
+                </div>
+                <input type="text" class="form-control" placeholder="Процент" aria-label="Процент"
+                       aria-describedby="basic-addon2" id="gcPercentCount">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto">
+            <button type="button" class="btn btn-secondary" onclick="generate()">Отправить</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto" id="generated-output">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto">
+            <h4>Выполнил: <b>Разиль Миннеахметов 11-702</b></h4>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>
