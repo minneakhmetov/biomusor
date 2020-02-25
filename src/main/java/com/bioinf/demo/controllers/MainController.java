@@ -1,7 +1,7 @@
 package com.bioinf.demo.controllers;
 
-import com.bioinf.demo.models.Answer;
-import com.bioinf.demo.services.MainService;
+import com.bioinf.demo.models.ORF;
+import com.bioinf.demo.services.DnaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @Controller
 public class MainController {
 
     @Autowired
-    private MainService mainService;
+    private DnaService mainService;
 
     @GetMapping("/")
     public String getMainPage(){
@@ -22,14 +25,19 @@ public class MainController {
 
     @PostMapping("/manual")
     @ResponseBody
-    private Answer manual(@RequestParam("dna") String dna){
-        return mainService.manual(dna);
+    private ORF manual(@RequestParam("dna") String dna){
+        return mainService.pretty(dna);
     }
 
     @PostMapping("/generate")
     @ResponseBody
-    private Answer generate(@RequestParam("gcPercentCount") Integer gcpc, @RequestParam("length") Integer length){
-        return mainService.generate(length, gcpc);
+    private ORF generate(@RequestParam("gcPercentCount") Integer gcpc, @RequestParam("length") Integer length){
+        return mainService.pretty(length, gcpc);
+    }
+
+    @GetMapping("/task2")
+    public void task2(HttpServletResponse response) throws IOException {
+        mainService.task2(response.getWriter());
     }
 
 }

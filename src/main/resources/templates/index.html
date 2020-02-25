@@ -18,9 +18,16 @@
     <script>
         function renderTable(item, data) {
             let text = '<span> <b> Запрошенная ДНК: </b>' + data.dna + '</span>';
-            if (data.answer != null)
-                text += '<div class="alert alert-success" role="alert">Найдено ORF: ' + data.answer + '</div>';
-            else text += '<div class="alert alert-danger" role="alert">ORF не найдено</div>';
+            if (data.orf != 'DEFAULT') {
+                text += '<div class="alert alert-success" role="alert">Найдено ORF: ' + data.orf +  '<br>' +
+                        'Оттранслированный белок: ' + data.protein + '<br>' +
+                        'Диапазон порядковых номеров букв в цепи ДНК [' + data.start + "; " + data.end + "] <br>" +
+                        'Найдено на ' + (data.reverse ? "обратной" : "прямой") + " цепи" +
+
+                    '</div>';
+
+            }
+                else text += '<div class="alert alert-danger" role="alert">ORF не найдено</div>';
             item.innerHTML = text;
         }
 
@@ -79,7 +86,7 @@
 
     </style>
 </head>
-<body style="background-image: url('https://wallpaperplay.com/walls/full/a/9/e/44641.jpg')">
+<body style="background-image: url('https://img2.goodfon.ru/original/2560x1600/6/1e/uzor-biologiya-ploskiy.jpg')">
 
 <div class="container">
     <div class="row">
@@ -167,6 +174,12 @@
     <div class="row">
         <div class="col-auto">
             <h4>Выполнил: <b>Разиль Миннеахметов 11-702</b></h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-auto">
+            <a href="/task2"><button type="button" class="btn btn-secondary">Задание 2</button></a>
         </div>
     </div>
 
