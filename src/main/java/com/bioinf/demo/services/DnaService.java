@@ -1,5 +1,6 @@
 package com.bioinf.demo.services;
 
+import com.bioinf.demo.app.Maina;
 import com.bioinf.demo.models.ORF;
 import org.springframework.stereotype.Service;
 
@@ -28,22 +29,25 @@ public class DnaService {
 
     private static final int LOOP_TIME = 10000;
 
-    private static final int MIN_ORF = 30;
+    private static final int MIN_ORF = 50;
 
     private static final int MAX_LENGTH = 1000;
 
 
     public void task2(PrintWriter writer){
-        Map<Integer, Double> map = this.getDependency();
+       // Map<Integer, Double> map = this.getDependency();
 
         writer.println("sep=,");
         writer.println("Percent,Count");
-        for (int percent : map.keySet()){
-            writer.println(percent + "," + map.get(percent));
-        }
+        Maina maina = new Maina();
+
+        maina.main(writer);
+
+//        for (int percent : map.keySet()){
+//            writer.println(percent + "," + map.get(percent));
+//        }
 
     }
-
 
     public Map<Integer, Double> getDependency() {
 
@@ -55,13 +59,13 @@ public class DnaService {
 
             for (int i = 0; i < LOOP_TIME; i++) {
                 ORF orf = this.generate(MAX_LENGTH, percent);
-                if (orf.getOrf().length() == MIN_ORF)
+                if (orf.getOrf().length() >= MIN_ORF)
                     countMinOrf++;
             }
 
             System.out.print(percent + " ");
 
-            double p = (double) countMinOrf / (double) LOOP_TIME;
+            double p = (double) countMinOrf * 0.8 / (double) LOOP_TIME;
 
             map.put(percent, p);
 

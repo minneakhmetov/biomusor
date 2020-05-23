@@ -1,6 +1,8 @@
 package com.bioinf.demo.controllers;
 
+import com.bioinf.demo.models.Data;
 import com.bioinf.demo.models.ORF;
+import com.bioinf.demo.newick.Analyzer;
 import com.bioinf.demo.services.DnaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,9 @@ public class MainController {
 
     @Autowired
     private DnaService mainService;
+
+    @Autowired
+    private Analyzer analyzer;
 
     @GetMapping("/")
     public String getMainPage(){
@@ -38,6 +43,17 @@ public class MainController {
     @GetMapping("/task2")
     public void task2(HttpServletResponse response) throws IOException {
         mainService.task2(response.getWriter());
+    }
+
+    @GetMapping("/newick")
+    public String newick(){
+        return "newick";
+    }
+
+    @PostMapping("/newick")
+    @ResponseBody
+    public Data newick(@RequestParam("string") String string){
+        return new Data(analyzer.processLine(string));
     }
 
 }

@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bioinf</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>dz1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
+    <name>dz1</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
